@@ -110,7 +110,8 @@ public final class JarManifestForkConfiguration
         }
         Path parent = file.getParentFile().toPath();
         FileOutputStream fos = new FileOutputStream( file );
-        try ( JarOutputStream jos = new JarOutputStream( fos ) )
+        JarOutputStream jar = new JarOutputStream( fos );
+        try ( final JarOutputStream jos = jar )
         {
             jos.setLevel( JarOutputStream.STORED );
             JarEntry je = new JarEntry( "META-INF/MANIFEST.MF" );
@@ -149,10 +150,11 @@ public final class JarManifestForkConfiguration
             man.write( jos );
 
             jos.closeEntry();
-            jos.flush();
-
-            return file;
+            jos.finish();
         }
+
+        jar.flush();
+        return file;
     }
 
     static String relativize( @Nonnull Path parent, @Nonnull Path child )
