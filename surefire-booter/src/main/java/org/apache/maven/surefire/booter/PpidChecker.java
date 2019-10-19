@@ -39,9 +39,7 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.regex.Pattern.compile;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_HP_UX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_UNIX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.apache.commons.lang3.SystemUtils.*;
 import static org.apache.maven.surefire.booter.ProcessInfo.unixProcessInfo;
 import static org.apache.maven.surefire.booter.ProcessInfo.windowsProcessInfo;
 import static org.apache.maven.surefire.booter.ProcessInfo.ERR_PROCESS_INFO;
@@ -181,8 +179,8 @@ final class PpidChecker
                 return previousOutputLine;
             }
         };
-
-        return reader.execute( "/bin/sh", "-c", unixPathToPS() + " -o etime= -p " + ppid );
+        String cmd = unixPathToPS() + " -o etime= " + ( IS_OS_LINUX ? "" : "-p " ) + ppid;
+        return reader.execute( "/bin/sh", "-c", cmd );
     }
 
     ProcessInfo windows()
