@@ -126,6 +126,10 @@ final class PpidChecker
             checkProcessInfo();
 
             // let's compare elapsed time, should be greater or equal if parent process is the same and still alive
+            DumpErrorSingleton.getSingleton()
+                    .dumpText( "previousInfo=" + previousInfo
+                            + ", previousInfo == null || parentProcessInfo.isTimeBefore( previousInfo )="
+                            + ( previousInfo == null || parentProcessInfo.isTimeBefore( previousInfo ) ) );
             return !parentProcessInfo.isInvalid()
                     && ( previousInfo == null || !parentProcessInfo.isTimeBefore( previousInfo ) );
         }
@@ -365,10 +369,13 @@ final class PpidChecker
                 while ( scanner.hasNextLine() )
                 {
                     String line = scanner.nextLine().trim();
+                    DumpErrorSingleton.getSingleton().dumpText( "line=" + line );
                     processInfo = consumeLine( line, processInfo );
                 }
                 checkValid( scanner );
                 int exitCode = process.waitFor();
+                DumpErrorSingleton.getSingleton()
+                        .dumpStreamText( "exitCode=" + exitCode + ", stopped=" + isStopped() );
                 return isStopped() ? ERR_PROCESS_INFO : exitCode == 0 ? processInfo : INVALID_PROCESS_INFO;
             }
             catch ( Exception e )
