@@ -1646,18 +1646,7 @@ public abstract class AbstractSurefireMojo
     {
         if ( isSpecificTestSpecified() )
         {
-            if ( getFailIfNoSpecifiedTests() != null )
-            {
-                return getFailIfNoSpecifiedTests();
-            }
-            else if ( getFailIfNoTests() != null )
-            {
-                return getFailIfNoTests();
-            }
-            else
-            {
-                return true;
-            }
+            return false;
         }
         else
         {
